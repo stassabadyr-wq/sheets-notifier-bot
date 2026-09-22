@@ -1,6 +1,17 @@
 """
-Точка входа: запускает бота и worker проверки таблиц одновременно.
+Sheets Notifier Bot — точка входа.
+
+⚠️ Это ДЕМО-версия. Полный код доступен в платной версии.
+
+Демо показывает структуру проекта и базовый запуск.
+Полная версия включает:
+- bot_handlers.py (FSM, обработчики)
+- yandex_sheets.py (Yandex Disk API)
+- database.py (SQLite)
+
+Купить полную версию: [ссылка на VibeDepot]
 """
+
 import asyncio
 import logging
 import sys
@@ -9,83 +20,36 @@ from aiogram import Bot, Dispatcher
 from aiogram.client.default import DefaultBotProperties
 from aiogram.enums import ParseMode
 
-from config import BOT_TOKEN, CHECK_INTERVAL
-from database import init_db
-from bot_handlers import router, check_all_trackings
+from config import BOT_TOKEN
 
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s · %(levelname)s · %(name)s · %(message)s",
-    handlers=[
-        logging.StreamHandler(sys.stdout),
-        logging.FileHandler("bot.log", encoding="utf-8"),
-    ],
+    handlers=[logging.StreamHandler(sys.stdout)],
 )
 log = logging.getLogger(__name__)
 
 
-async def tracking_worker(bot: Bot):
-    """
-    Бесконечный цикл проверки таблиц.
-    Запускается в фоне, не блокирует бота.
-    """
-    log.info(f"▶️ Worker запущен (интервал: {CHECK_INTERVAL} сек)")
-
-    # Первая проверка через 30 секунд после старта
-    await asyncio.sleep(30)
-
-    while True:
-        try:
-            await check_all_trackings(bot)
-        except Exception as e:
-            log.error(f"Ошибка в worker: {e}", exc_info=True)
-
-        await asyncio.sleep(CHECK_INTERVAL)
-
-
 async def main():
-    log.info("=" * 60)
-    log.info("🚀 Sheets Notifier Bot запускается...")
-    log.info("=" * 60)
+    log.info("🚀 Sheets Notifier Bot — ДЕМО-версия")
 
-    # 1. Инициализация БД
-    await init_db()
-    log.info("✅ База данных готова")
-
-    # 2. Создание бота и диспетчера
     bot = Bot(
         token=BOT_TOKEN,
         default=DefaultBotProperties(parse_mode=ParseMode.HTML),
     )
     dp = Dispatcher()
-    dp.include_router(router)
 
-    # 3. Проверка токена
     me = await bot.get_me()
-    log.info(f"✅ Бот @{me.username} запущен (ID: {me.id})")
-    log.info(f"📖 Имя: {me.first_name}")
+    log.info(f"✅ Бот @{me.username} подключён")
 
-    # 4. Запуск worker'а в фоне
-    worker_task = asyncio.create_task(tracking_worker(bot), name="tracking_worker")
+    log.warning("⚠️ Это демо. Полный функционал доступен в платной версии.")
+    log.warning("   Полная версия: bot_handlers.py, yandex_sheets.py, database.py")
 
-    # 5. Запуск polling
-    try:
-        await dp.start_polling(
-            bot,
-            allowed_updates=dp.resolve_used_update_types(),
-        )
-    finally:
-        worker_task.cancel()
-        try:
-            await worker_task
-        except asyncio.CancelledError:
-            pass
-        await bot.session.close()
-        log.info("👋 Бот остановлен")
+    await bot.session.close()
 
 
 if __name__ == "__main__":
     try:
         asyncio.run(main())
     except (KeyboardInterrupt, SystemExit):
-        log.info("Остановка по сигналу")
+        log.info("Остановка")

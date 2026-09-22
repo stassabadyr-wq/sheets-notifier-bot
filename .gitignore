@@ -18,3 +18,8 @@ bot.db-journal
 .idea/
 .vscode/
 .DS_Store
+
+# Приватные файлы (только в платной версии)
+bot_handlers.py
+yandex_sheets.py
+database.py
