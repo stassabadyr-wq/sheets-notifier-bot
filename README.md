@@ -2,6 +2,24 @@
 
 Telegram-бот, который следит за XLSX-файлом на Яндекс Диске и присылает уведомления при появлении новых строк.
 
+> 📦 **Купить полную версию:** [vibedepot.ru/p/sheets-notifier-bot](https://vibedepot.ru/p/sheets-notifier-bot-uvedomleniya-iz-yandeks-diska-v-telegram)
+
+---
+
+## ⚠️ Это демо-версия
+
+В этом репозитории — **публичная часть** проекта. Полный рабочий код (`bot_handlers.py`, `database.py`, `yandex_sheets.py`, `main.py`) доступен в платной версии.
+
+**Что в платной версии:**
+- 🔒 `bot_handlers.py` — FSM, обработчики, уведомления
+- 🔒 `yandex_sheets.py` — работа с Yandex Disk API
+- 🔒 `database.py` — SQLite, SQL-запросы
+- 🔒 `main.py` — полная точка входа с polling и worker
+
+**Купить:** [vibedepot.ru/p/sheets-notifier-bot](https://vibedepot.ru/p/sheets-notifier-bot-uvedomleniya-iz-yandeks-diska-v-telegram)
+
+---
+
 ## Возможности
 
 - 📋 **Добавление файлов** — по публичной ссылке на папку Яндекс Диска + имя файла
@@ -35,7 +53,7 @@ Telegram-бот, который следит за XLSX-файлом на Янд�
 ## Установка
 
 ```bash
-git clone https://github.com/yourusername/sheets-notifier-bot.git
+git clone https://github.com/stassabadyr-wq/sheets-notifier-bot.git
 cd sheets-notifier-bot
 python -m venv .venv
 source .venv/bin/activate  # Windows: .venv\Scripts\Activate.ps1
